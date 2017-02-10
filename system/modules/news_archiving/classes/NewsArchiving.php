@@ -65,7 +65,7 @@ class NewsArchiving
                     // log
                     if( $result->affectedRows > 0 )
                     {
-                        \System::log('Moved '.$result->affectedRows.' news entries from "'.$objArchives->title.'" to target archive due to time criteria.', __METHOD__, TL_GENERAL);
+                        \System::log('Moved '.$result->affectedRows.' news entries from "'.$objArchives->title.'" to "'.$objTarget->title.'" due to time criteria.', __METHOD__, TL_GENERAL);
                     }
                 }
             }
@@ -79,7 +79,7 @@ class NewsArchiving
                 // log
                 if( $result->affectedRows > 0 )
                 {
-                    \System::log('Moved '.$result->affectedRows.' news entries from "'.$objArchives->title.'" to target archive due to stop criteria.', __METHOD__, TL_GENERAL);
+                    \System::log('Moved '.$result->affectedRows.' news entries from "'.$objArchives->title.'" to "'.$objTarget->title.'" due to stop criteria.', __METHOD__, TL_GENERAL);
                 }
             }
         }
