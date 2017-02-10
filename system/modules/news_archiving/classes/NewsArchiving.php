@@ -44,6 +44,15 @@ class NewsArchiving
         // go through each archive
         while( $objArchives->next() )
         {
+            // get the target
+            $objTarget = \NewsArchiveModel::findById( $objArchives->archivingTarget );
+
+            // check for valid target
+            if( !$objTarget )
+            {
+                continue;
+            }
+
             // move according to time
             if( $objArchives->archivingTime )
             {
@@ -51,7 +60,7 @@ class NewsArchiving
                 if( ( $time = strtotime('-'.$objArchives->archivingTime) ) )
                 {
                     // move the news entries
-                    $result = $db->prepare("UPDATE tl_news SET pid = ? WHERE pid = ? AND time < ?")->execute( $objArchives->archivingTarget, $objArchives->id, $time );
+                    $result = $db->prepare("UPDATE tl_news SET pid = ? WHERE pid = ? AND time < ?")->execute( $objTarget->id, $objArchives->id, $time );
 
                     // log
                     if( $result->affectedRows > 0 )
@@ -65,7 +74,7 @@ class NewsArchiving
             if( $objArchives->archivingStop )
             {
                 // move the news entries
-                $result = $db->prepare("UPDATE tl_news SET pid = ?, stop = '' WHERE pid = ? AND stop != '' AND stop < UNIX_TIMESTAMP()")->execute( $objArchives->archivingTarget, $objArchives->id );
+                $result = $db->prepare("UPDATE tl_news SET pid = ?, stop = '' WHERE pid = ? AND stop != '' AND stop < UNIX_TIMESTAMP()")->execute( $objTarget->id, $objArchives->id );
 
                 // log
                 if( $result->affectedRows > 0 )
