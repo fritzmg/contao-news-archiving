@@ -1,3 +1,6 @@
+[![](https://img.shields.io/packagist/v/fritzmg/contao-news-archiving.svg)](https://packagist.org/packages/fritzmg/contao-news-archiving)
+[![](https://img.shields.io/packagist/dt/fritzmg/contao-news-archiving.svg)](https://packagist.org/packages/fritzmg/contao-news-archiving)
+
 Contao News Archiving
 =====================
 
