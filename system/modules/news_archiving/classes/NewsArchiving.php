@@ -13,6 +13,7 @@ use Contao\Database;
 use Contao\NewsArchiveModel;
 use Contao\System;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class NewsArchiving
 {
@@ -99,8 +100,14 @@ class NewsArchiving
             System::log($message, $method, TL_GENERAL);
         } else {
             $context = new ContaoContext($method, ContaoContext::GENERAL);
+
+            try {
+                $logger = System::getContainer()->get('monolog.logger.contao.general');
+            } catch (ServiceNotFoundException $e) {
+                $logger = System::getContainer()->get('logger');
+            }
+
             /** @var LoggerInterface $logger */
-            $logger = System::getContainer()->get('logger');
             $logger->info($message, ['contao' => $context]); 
         }
     }

@@ -8,7 +8,6 @@
  * @package    news_archiving
  */
 
-
 $GLOBALS['TL_DCA']['tl_news_archive']['config']['onload_callback'][] = array('NewsArchiving','archiveNews');
 $GLOBALS['TL_DCA']['tl_news_archive']['palettes']['default'] .= ';{archiving_legend:hide},archiving';
 $GLOBALS['TL_DCA']['tl_news_archive']['palettes']['__selector__'][] = 'archiving';
@@ -28,9 +27,10 @@ $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archivingTarget'] = array
     'label'            => &$GLOBALS['TL_LANG']['tl_news_archive']['archivingTarget'],
     'exclude'          => true,
     'inputType'        => 'radio',
-    'options_callback' => array('tl_news_archiving', 'getNewsArchives'),
+    'foreignKey'       => 'tl_news_archive.title',
     'eval'             => array('mandatory'=>true),
-    'sql'              => "int(10) unsigned NOT NULL default '0'"
+    'sql'              => "int(10) unsigned NOT NULL default '0'",
+    'relation'         => array('type'=>'hasOne', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archivingTime'] = array
@@ -52,25 +52,3 @@ $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archivingStop'] = array
     'eval'      => array('tl_class'=>'w50 m12'),
     'sql'       => "char(1) NOT NULL default ''"
 );
-
-
-class tl_news_archiving
-{
-    /**
-     * Get all news archives and return them as array
-     *
-     * @return array
-     */
-    public function getNewsArchives()
-    {
-        $arrArchives = array();
-        $objArchives = \Database::getInstance()->execute("SELECT id, title FROM tl_news_archive ORDER BY title");
-
-        while( $objArchives->next() )
-        {
-            $arrArchives[$objArchives->id] = $objArchives->title;
-        }
-
-        return $arrArchives;
-    }
-}
