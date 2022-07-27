@@ -8,6 +8,11 @@
  * @package    news_archiving
  */
 
+use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\Database;
+use Contao\NewsArchiveModel;
+use Contao\System;
+use Psr\Log\LoggerInterface;
 
 class NewsArchiving
 {
@@ -31,7 +36,7 @@ class NewsArchiving
         }
 
         // get the Database object
-        $db = \Database::getInstance();
+        $db = Database::getInstance();
 
         // get all news archives where archiving is active
         $objArchives = $db->execute("SELECT id, title, archivingTarget, archivingTime, archivingStop 
@@ -45,7 +50,7 @@ class NewsArchiving
         while( $objArchives->next() )
         {
             // get the target
-            $objTarget = \NewsArchiveModel::findById( $objArchives->archivingTarget );
+            $objTarget = NewsArchiveModel::findById( $objArchives->archivingTarget );
 
             // check for valid target
             if( !$objTarget )
@@ -65,7 +70,7 @@ class NewsArchiving
                     // log
                     if( $result->affectedRows > 0 )
                     {
-                        \System::log('Moved '.$result->affectedRows.' news entries from "'.$objArchives->title.'" to "'.$objTarget->title.'" due to time criteria.', __METHOD__, TL_GENERAL);
+                        $this->log('Moved '.$result->affectedRows.' news entries from "'.$objArchives->title.'" to "'.$objTarget->title.'" due to time criteria.', __METHOD__);
                     }
                 }
             }
@@ -79,12 +84,24 @@ class NewsArchiving
                 // log
                 if( $result->affectedRows > 0 )
                 {
-                    \System::log('Moved '.$result->affectedRows.' news entries from "'.$objArchives->title.'" to "'.$objTarget->title.'" due to stop criteria.', __METHOD__, TL_GENERAL);
+                    $this->log('Moved '.$result->affectedRows.' news entries from "'.$objArchives->title.'" to "'.$objTarget->title.'" due to stop criteria.', __METHOD__);
                 }
             }
         }
 
         // set to archived
         self::$blnArchived = true;
+    }
+
+    private function log(string $message, string $method): void
+    {
+        if (method_exists(System::class, 'log')) {
+            System::log($message, $method, TL_GENERAL);
+        } else {
+            $context = new ContaoContext($method, ContaoContext::GENERAL);
+            /** @var LoggerInterface $logger */
+            $logger = System::getContainer()->get('logger');
+            $logger->info($message, ['contao' => $context]); 
+        }
     }
 }

@@ -1,7 +1,6 @@
 {
 	"name":"fritzmg/contao-news-archiving",
 	"description":"Contao extension to automatically move news entries to a different archive after a period of time.",
-	"keywords":["contao", "austrian", "districts", "form", "field", "element"],
 	"type":"contao-module",
 	"homepage":"https://github.com/fritzmg/contao-news-archiving",
 	"license":"LGPL-3.0-or-later",
@@ -26,9 +25,12 @@
 		}
 	],
 	"require":{
-		"php":">=5.4",
-		"contao/core-bundle":"~3.2 || ~4.2",
+		"php":">=7.1",
+		"contao/core-bundle":"^3.2 || ^4.2 || ^5.0",
 		"contao-community-alliance/composer-plugin":"~2.4 || ~3.0"
+	},
+	"autoload": {
+		"classmap": ["system/modules/news_archiving/classes/"]
 	},
 	"extra":{
 		"contao":{
