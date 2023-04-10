@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the Contao News Archiving extension.
+ *
+ * (c) inspiredminds
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
 /*
@@ -26,18 +34,18 @@ $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archivingTarget'] = [
     'inputType' => 'radio',
     'foreignKey' => 'tl_news_archive.title',
     'eval' => ['mandatory' => true],
-    'sql' => "int(10) unsigned NOT NULL default '0'",
+    'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0],
     'relation' => ['type' => 'hasOne', 'load' => 'lazy'],
 ];
 
 $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archivingTime'] = [
     'label' => &$GLOBALS['TL_LANG']['tl_news_archive']['archivingTime'],
     'exclude' => true,
-    'inputType' => 'select',
-    'options' => ['', '1 day', '1 week', '1 month', '1 year'],
+    'inputType' => 'inputUnit',
+    'options' => ['hours', 'days', 'weeks', 'months', 'years'],
     'reference' => &$GLOBALS['TL_LANG']['tl_news_archive']['times'],
-    'eval' => ['tl_class' => 'w50'],
-    'sql' => "varchar(32) NOT NULL default ''",
+    'eval' => ['tl_class' => 'w50', 'rgxp' => 'natural'],
+    'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
 ];
 
 $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archivingStop'] = [

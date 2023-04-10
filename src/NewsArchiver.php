@@ -10,20 +10,24 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace InspireMinds\ContaoNewsArchiving;
+namespace InspiredMinds\ContaoNewsArchiving;
 
-use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\CoreBundle\ServiceAnnotation\CronJob;
+use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\NewsArchiveModel;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 
 /**
- * Executes news archivin according to each news archive's settings.
+ * Executes news archiving according to each news archive's settings.
  *
  * @Callback(table="tl_news", target="config.onload")
  * @Callback(table="tl_news_archive", target="config.onload")
+ *
  * @CronJob("minutely")
+ *
  * @Hook("getPageLayout")
  */
 class NewsArchiver
@@ -67,8 +71,12 @@ class NewsArchiver
                 continue;
             }
 
+            $archivingTime = StringUtil::deserialize($archive->archivingTime, true);
+            $value = $archivingTime['value'] ?? null;
+            $unit = $archivingTime['unit'] ?? null;
+
             // Move according to time
-            if ($archive->archivingTime && ($time = strtotime('-'.$archive->archivingTime))) {
+            if ($value && $unit && ($time = strtotime('-'.$value.' '.$unit))) {
                 $result = $this->db->executeQuery('UPDATE tl_news SET pid = ? WHERE pid = ? AND time < ?', [$target->id, $archive->id, $time]);
                 $count = $result->rowCount();
 
