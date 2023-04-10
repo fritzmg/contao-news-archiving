@@ -63,7 +63,7 @@ class NewsArchiver
         );
 
         // Go through each archive
-        foreach ($archives as $archive) {
+        foreach ($archives ?? [] as $archive) {
             // Get the target archive
             $target = NewsArchiveModel::findById($archive->archivingTarget);
 

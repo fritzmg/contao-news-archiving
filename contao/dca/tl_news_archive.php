@@ -21,7 +21,6 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
  */
 
 $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archiving'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_news_archive']['archiving'],
     'exclude' => true,
     'inputType' => 'checkbox',
     'eval' => ['submitOnChange' => true],
@@ -29,7 +28,6 @@ $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archiving'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archivingTarget'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_news_archive']['archivingTarget'],
     'exclude' => true,
     'inputType' => 'radio',
     'foreignKey' => 'tl_news_archive.title',
@@ -39,7 +37,6 @@ $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archivingTarget'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archivingTime'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_news_archive']['archivingTime'],
     'exclude' => true,
     'inputType' => 'inputUnit',
     'options' => ['hours', 'days', 'weeks', 'months', 'years'],
@@ -49,18 +46,44 @@ $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archivingTime'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_news_archive']['fields']['archivingStop'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_news_archive']['archivingStop'],
     'exclude' => true,
     'inputType' => 'checkbox',
     'eval' => ['tl_class' => 'w50 m12'],
     'sql' => "char(1) NOT NULL default ''",
 ];
 
+$GLOBALS['TL_DCA']['tl_news_archive']['fields']['deletion'] = [
+    'exclude' => true,
+    'inputType' => 'checkbox',
+    'eval' => ['submitOnChange' => true],
+    'sql' => ['type' => 'boolean', 'default' => false],
+];
+
+$GLOBALS['TL_DCA']['tl_news_archive']['fields']['deletionTime'] = [
+    'exclude' => true,
+    'inputType' => 'inputUnit',
+    'options' => ['days', 'weeks', 'months', 'years'],
+    'reference' => &$GLOBALS['TL_LANG']['tl_news_archive']['times'],
+    'eval' => ['tl_class' => 'w50', 'rgxp' => 'natural'],
+    'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
+];
+
+$GLOBALS['TL_DCA']['tl_news_archive']['fields']['deletionStop'] = [
+    'exclude' => true,
+    'inputType' => 'checkbox',
+    'eval' => ['tl_class' => 'w50 m12'],
+    'sql' => ['type' => 'boolean', 'default' => false],
+];
+
 $GLOBALS['TL_DCA']['tl_news_archive']['palettes']['__selector__'][] = 'archiving';
+$GLOBALS['TL_DCA']['tl_news_archive']['palettes']['__selector__'][] = 'deletion';
 $GLOBALS['TL_DCA']['tl_news_archive']['subpalettes']['archiving'] = 'archivingTarget,archivingTime,archivingStop';
+$GLOBALS['TL_DCA']['tl_news_archive']['subpalettes']['deletion'] = 'deletionTime,deletionStop';
 
 PaletteManipulator::create()
     ->addLegend('archiving_legend', null, PaletteManipulator::POSITION_AFTER, true)
-    ->addField('archiving')
+    ->addField('archiving', 'archiving_legend', PaletteManipulator::POSITION_APPEND)
+    ->addLegend('deletion_legend', null, PaletteManipulator::POSITION_AFTER, true)
+    ->addField('deletion', 'deletion_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('default', 'tl_news_archive')
 ;
