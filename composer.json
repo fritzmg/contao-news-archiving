@@ -1,42 +1,49 @@
 {
-	"name":"fritzmg/contao-news-archiving",
-	"description":"Contao extension to automatically move news entries to a different archive after a period of time.",
-	"type":"contao-module",
-	"homepage":"https://github.com/fritzmg/contao-news-archiving",
-	"license":"LGPL-3.0-or-later",
-	"authors":[
-		{
-			"name":"Fritz Michael Gschwantner",
-			"homepage":"http://www.inspiredminds.at",
-			"email":"fmg@inspiredminds.at",
-			"role":"Developer"
-		}
-	],
-	"support":{
-		"email":"fmg@inspiredminds.at",
-		"issues":"https://github.com/fritzmg/contao-news-archiving/issues",
-		"source":"https://github.com/fritzmg/contao-news-archiving",
-		"forum":"https://community.contao.org/de"
+    "name": "fritzmg/contao-news-archiving",
+    "description": "Contao extension to automatically move news entries to a different archive after a period of time - or delete them.",
+    "type": "contao-bundle",
+    "license": "LGPL-3.0-or-later",
+    "homepage": "https://github.com/fritzmg/contao-news-archiving",
+    "authors": [
+        {
+            "name": "Fritz Michael Gschwantner",
+            "email": "fmg@inspiredminds.at",
+            "role": "Developer"
+        }
+    ],
+	"support": {
+		"issues": "https://github.com/fritzmg/contao-news-archiving/issues",
+		"source": "https://github.com/fritzmg/contao-news-archiving",
+		"forum": "https://community.contao.org/de"
 	},
 	"funding": [
-		{
-			"type": "github",
-			"url": "https://github.com/sponsors/fritzmg"
-		}
-	],
-	"require":{
-		"php":">=7.1",
-		"contao/core-bundle":"^3.2 || ^4.2 || ^5.0",
-		"contao-community-alliance/composer-plugin":"~2.4 || ~3.0"
-	},
-	"autoload": {
-		"classmap": ["system/modules/news_archiving/classes/"]
-	},
-	"extra":{
-		"contao":{
-			"sources": {
-				"system/modules/news_archiving":"system/modules/news_archiving"
-			}
-		}
-	}
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/fritzmg"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "contao/core-bundle": "^4.13 || ^5.0",
+        "symfony/dependency-injection": "^4.4 || ^5.1 || ^6.0",
+        "symfony/http-kernel": "^4.4 || ^5.1 || ^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "InspiredMinds\\ContaoNewsArchiving\\": "src/"
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "InspiredMinds\\ContaoNewsArchiving\\ContaoManager\\Plugin"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16 || ^3.0",
+        "rector/rector": "^0.14.5"
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "php-http/discovery": false
+        }
+    }
 }

@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        autowiring: true
+        autoconfigure: true
+        bind:
+            $generalLogger: '@monolog.logger.contao.general'
+    
+    InspiredMinds\ContaoNewsArchiving\:
+        resource: ../src
+        exclude: ../src/{ContaoManager,DependencyInjection,ContaoNewsArchivingBundle.php}
