@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace InspiredMinds\ContaoNewsArchiving;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
@@ -37,11 +38,13 @@ class NewsArchiver
 
     private LoggerInterface $generalLogger;
     private Connection $db;
+    private ContaoFramework $contaoFramework;
 
-    public function __construct(LoggerInterface $generalLogger, Connection $db)
+    public function __construct(LoggerInterface $generalLogger, Connection $db, ContaoFramework $contaoFramework)
     {
         $this->generalLogger = $generalLogger;
         $this->db = $db;
+        $this->contaoFramework = $contaoFramework;
     }
 
     public function __invoke(): void
@@ -50,6 +53,8 @@ class NewsArchiver
         if (self::$archived) {
             return;
         }
+
+        $this->contaoFramework->initialize();
 
         // Get all news archives where archiving is active
         $archives = NewsArchiveModel::findBy(
