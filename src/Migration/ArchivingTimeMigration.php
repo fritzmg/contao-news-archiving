@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of the Contao News Archiving extension.
  *
- * (c) inspiredminds
+ * (c) INSPIRED MINDS
  *
  * @license LGPL-3.0-or-later
  */
@@ -21,11 +21,8 @@ use Doctrine\DBAL\Connection;
  */
 class ArchivingTimeMigration extends AbstractMigration
 {
-    private Connection $db;
-
-    public function __construct(Connection $db)
+    public function __construct(private readonly Connection $db)
     {
-        $this->db = $db;
     }
 
     public function shouldRun(): bool
@@ -50,7 +47,7 @@ class ArchivingTimeMigration extends AbstractMigration
         $records = $this->db->fetchAllAssociative("SELECT id, archivingTime FROM tl_news_archive WHERE archivingTime != '' AND archivingTime NOT LIKE 'a:2:{%'");
 
         foreach ($records as $record) {
-            [$value, $unit] = explode(' ', $record['archivingTime']) + [null, null];
+            [$value, $unit] = explode(' ', (string) $record['archivingTime']) + [null, null];
             $this->db->update('tl_news_archive', ['archivingTime' => serialize(['value' => $value, 'unit' => $unit.'s'])], ['id' => $record['id']]);
         }
 

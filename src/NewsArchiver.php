@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of the Contao News Archiving extension.
  *
- * (c) inspiredminds
+ * (c) INSPIRED MINDS
  *
  * @license LGPL-3.0-or-later
  */
@@ -36,15 +36,11 @@ class NewsArchiver
     // Whether archiving was done already in this process.
     protected static bool $archived = false;
 
-    private LoggerInterface $generalLogger;
-    private Connection $db;
-    private ContaoFramework $contaoFramework;
-
-    public function __construct(LoggerInterface $generalLogger, Connection $db, ContaoFramework $contaoFramework)
-    {
-        $this->generalLogger = $generalLogger;
-        $this->db = $db;
-        $this->contaoFramework = $contaoFramework;
+    public function __construct(
+        private readonly LoggerInterface $generalLogger,
+        private readonly Connection $db,
+        private readonly ContaoFramework $contaoFramework,
+    ) {
     }
 
     public function __invoke(): void
@@ -64,7 +60,7 @@ class NewsArchiver
                 "(archivingTime != '' OR archivingStop = 1)",
             ],
             [],
-            ['order' => 'title ASC']
+            ['order' => 'title ASC'],
         );
 
         // Go through each archive
