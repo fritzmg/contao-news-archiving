@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * This file is part of the Contao News Archiving extension.
  *
- * (c) inspiredminds
+ * (c) INSPIRED MINDS
  *
  * @license LGPL-3.0-or-later
  */
@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace InspiredMinds\ContaoNewsArchiving;
 
 use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Contao\NewsArchiveModel;
 use Contao\StringUtil;
@@ -26,17 +27,17 @@ use Psr\Log\LoggerInterface;
  */
 class NewsDeleter
 {
-    private LoggerInterface $generalLogger;
-    private Connection $db;
-
-    public function __construct(LoggerInterface $generalLogger, Connection $db)
-    {
-        $this->generalLogger = $generalLogger;
-        $this->db = $db;
+    public function __construct(
+        private readonly LoggerInterface $generalLogger,
+        private readonly Connection $db,
+        private readonly ContaoFramework $contaoFramework,
+    ) {
     }
 
     public function __invoke(): void
     {
+        $this->contaoFramework->initialize();
+
         // Get all news archives where deletion is active
         $archives = NewsArchiveModel::findBy(
             [
@@ -44,7 +45,7 @@ class NewsDeleter
                 "(deletionTime != '' OR deletionStop = 1)",
             ],
             [],
-            ['order' => 'title ASC']
+            ['order' => 'title ASC'],
         );
 
         Controller::loadDataContainer('tl_news');
@@ -63,7 +64,7 @@ class NewsDeleter
                     $this->deleteNews((int) $record);
                 }
 
-                if (!empty($records)) {
+                if ([] !== $records) {
                     $this->generalLogger->info('Deleted '.\count($records).' news entries from "'.$archive->title.'" due to time criteria.');
                 }
             }
@@ -76,7 +77,7 @@ class NewsDeleter
                     $this->deleteNews((int) $record);
                 }
 
-                if (!empty($records)) {
+                if ([] !== $records) {
                     $this->generalLogger->info('Deleted '.\count($records).' news entries from "'.$archive->title.'" due to stop criteria.');
                 }
             }
